@@ -56,7 +56,7 @@ public class HuffProcessor {
 	 * @param out Buffered bit stream writing to the output file.
 	 * @throws Exception
 	 */
-	public void decompress(BitInputStream in, BitOutputStream out) {
+	public void decompress(BitInputStream in, BitOutputStream out) throws Exception {
 		int bits = in.readBits(BITS_PER_INT);
 		if (bits != HUFF_TREE) {
 			throw new HuffException("illegal header starts with" + bits);
@@ -71,7 +71,7 @@ public class HuffProcessor {
 		out.close();
 	}
 
-	public HuffNode readTreeHeader(BitInputStream in) {
+	public HuffNode readTreeHeader(BitInputStream in) throws Exception {
 		int bit = in.readBits(BITS_PER_WORD + 1);
 		if (bit == -1)
 			throw new Exception("Bit not in Tree");
