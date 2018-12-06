@@ -95,7 +95,7 @@ public class HuffProcessor {
 	           else { 
 
 	               if (bits == 0) current = current.myLeft; // read a 0, go left
-	               else                                   // read a 1, go right
+	               else current = current.myRight;                   // read a 1, go right
 
 	               if (current.myLeft == null && current.myRight == null) { // at leaf!
 	                   if (current.myValue == PSEUDO_EOF) 
