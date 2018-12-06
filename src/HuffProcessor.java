@@ -72,7 +72,7 @@ public class HuffProcessor {
 //		}
 		out.close();
 	}
-	public HuffNode readTreeHeader(BitInputStream in) {
+	public HuffNode readTreeHeader(BitInputStream in) throws Exception {
 		int bit = in.readBits(BITS_PER_WORD + 1);
 		if(bit == -1) throw new Exception("Bit not in Tree");
 		if(bit == 0) {
@@ -81,7 +81,7 @@ public class HuffProcessor {
 			return new HuffNode(0, 0, left, right);
 		}
 		else {
-			values
+			int value = in.readBits(BITS_PER_WORD + 1);
 			return new HuffNode(value, 0, null, null);
 		}
 	}
