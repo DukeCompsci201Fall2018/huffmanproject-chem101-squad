@@ -76,6 +76,7 @@ public class HuffProcessor {
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
 			HuffNode t = new HuffNode(0, left.myWeight + right.myWeight, null, null);
+			//TODO might not be 0    ^^^ Don't know what else to put in
 			pq.add(t);
 		}
 		HuffNode root = pq.remove();
@@ -110,8 +111,8 @@ public class HuffProcessor {
 		if (root.myRight == null && root.myLeft == null) {
 			// path = path + "1";
 			out.writeBits(1, 1);
-			out.writeBits(numBits, value);
-			; // seems wrong should use root.myValue
+			out.writeBits(BITS_PER_WORD + 1, root.myValue);
+			//TODO wrong, should use root.myValue
 		}
 	}
 
