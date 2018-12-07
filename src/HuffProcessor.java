@@ -51,29 +51,26 @@ public class HuffProcessor {
 		out.close();
 	}
 
+	private void writeCompressedBits(String[] encoding, BitInputStream in, BitOutputStream out) {
+		in.readBits(BITS_PER_WORD);
+		for (int i = 0; i < encoding.length; i++) {
+			String code = encoding[i];
+			out.writeBits(code.length(), Integer.parseInt(code, 2));
+		}
+		String code = encoding[PSEUDO_EOF];
+		out.writeBits(code.length(), Integer.parseInt(code, 2));
+	}
+
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-		String path = "";
 		if (!(root.myRight == null && root.myLeft == null)) {
-			//path = path + "0";
+			out.writeBits(1, 0);
 			writeHeader(root.myLeft, out);
 			writeHeader(root.myRight, out);
 		}
 		if (root.myRight == null && root.myLeft == null) {
-			//path = path + "1" + root.myValue;
+			out.writeBits(1, 1);
+			out.write(BITS_PER_WORD + 1); // seems wrong should use root.myValue
 		}
-		//out.writeBits(BITS_PER_WORD + 1, path);
-//		int bit = in.readBits(1);
-//		if (bit == -1)
-//			throw new Exception("Bit not in Tree");
-//		if (bit == 0) {
-//			HuffNode left = readTreeHeader(in);
-//			HuffNode right = readTreeHeader(in);
-//			return new HuffNode(0, 0, left, right);
-//		} else {
-//			int value = in.readBits(BITS_PER_WORD + 1);
-//			return new HuffNode(value, 0, null, null);
-//		}
-
 	}
 
 	private String[] makeCodingsFromTree(HuffNode root) {
