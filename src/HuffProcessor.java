@@ -116,6 +116,8 @@ public class HuffProcessor {
 	}
 
 	private void writeCompressedBits(String[] encoding, BitInputStream in, BitOutputStream out) {
+		
+		//TODO WRONG
 		while (true) {
 			int bit = in.readBits(BITS_PER_WORD);
 			if (bit == -1) {
