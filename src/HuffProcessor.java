@@ -141,7 +141,7 @@ public class HuffProcessor {
 		out.close();
 	}
 
-	public HuffNode readTreeHeader(BitInputStream in) {
+	private HuffNode readTreeHeader(BitInputStream in) {
 		int bit = in.readBits(1);
 		if (bit == -1)
 			throw new HuffException("Bit not in Tree");
@@ -155,7 +155,7 @@ public class HuffProcessor {
 		}
 	}
 
-	public void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out) {
+	private void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out) {
 		HuffNode current = root; // root of tree, constructed from header data
 		while (true) {
 			int bits = in.readBits(1);
