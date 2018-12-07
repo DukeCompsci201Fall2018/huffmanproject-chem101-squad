@@ -112,7 +112,6 @@ public class HuffProcessor {
 			// path = path + "1";
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
-			//TODO wrong, should use root.myValue
 		}
 	}
 
