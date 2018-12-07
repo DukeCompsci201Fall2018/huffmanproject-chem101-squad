@@ -121,13 +121,7 @@ public class HuffProcessor {
 			if (bit == -1) {
 				break;
 			}
-			int letter = 0;
-		    for (int i = 0; i < encoding.length; i++) {
-		        if (encoding[i] == Integer.toString(bit)) {
-		            letter = i;
-		        }
-		    }
-			String code = encoding[letter];
+			String code = encoding[bit];
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
 		}
 		String code = encoding[PSEUDO_EOF];
