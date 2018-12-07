@@ -41,7 +41,7 @@ public class HuffProcessor {
 	public void compress(BitInputStream in, BitOutputStream out) {
 		int[] counts = readForCounts(in);
 		HuffNode root = makeTreeFromCounts(counts);
-		String[] codings = makeCodingsFromTree;
+		String[] codings = makeCodingsFromTree(root);
 
 		out.writeBits(BITS_PER_INT, HUFF_TREE);
 		writeHeader(root, out);
@@ -51,21 +51,64 @@ public class HuffProcessor {
 		out.close();
 	}
 
+	private void writeHeader(HuffNode root, BitOutputStream out) {
+		String path = "";
+		if (!(root.myRight == null && root.myLeft == null)) {
+			//path = path + "0";
+			writeHeader(root.myLeft, out);
+			writeHeader(root.myRight, out);
+		}
+		if (root.myRight == null && root.myLeft == null) {
+			//path = path + "1" + root.myValue;
+		}
+		//out.writeBits(BITS_PER_WORD + 1, path);
+//		int bit = in.readBits(1);
+//		if (bit == -1)
+//			throw new Exception("Bit not in Tree");
+//		if (bit == 0) {
+//			HuffNode left = readTreeHeader(in);
+//			HuffNode right = readTreeHeader(in);
+//			return new HuffNode(0, 0, left, right);
+//		} else {
+//			int value = in.readBits(BITS_PER_WORD + 1);
+//			return new HuffNode(value, 0, null, null);
+//		}
+
+	}
+
+	private String[] makeCodingsFromTree(HuffNode root) {
+		String[] encodings = new String[ALPH_SIZE + 1];
+		codingHelper(root, "", encodings);
+
+		return encodings;
+	}
+
+	private void codingHelper(HuffNode root, String path, String[] encodings) {
+		if (root.myLeft == null && root.myRight == null) {
+			encodings[root.myValue] = path;
+			return;
+		}
+		codingHelper(root.myLeft, path + "0", encodings);
+		codingHelper(root.myRight, path + "1", encodings);
+		return;
+	}
+
 	private HuffNode makeTreeFromCounts(int[] counts) {
 		PriorityQueue<HuffNode> pq = new PriorityQueue<>();
-		
-		for (int i = 0; i < counts.length ; i++ ) {
+
+		for (int i = 0; i < counts.length; i++) {
 			if (counts[i] > 0) {
-				pq.add(new HuffNode(i,counts[i],null,null));
+				pq.add(new HuffNode(i, counts[i], null, null));
 			}
 		}
 
 		while (pq.size() > 1) {
-		    HuffNode left = pq.remove();
-		    HuffNode right = pq.remove();
-		    HuffNode t = new HuffNode( , left.myWeight + right.myWeight, null, null)// create new HuffNode t with weight from
-		    // left.weight+right.weight and left, right subtrees
-		    pq.add(t);
+			HuffNode left = pq.remove();
+			HuffNode right = pq.remove();
+			HuffNode t = new HuffNode(0, left.myWeight + right.myWeight, null, null);// create new HuffNode t with
+																						// weight from
+			// left.weight+right.weight and left, right subtrees
+			pq.add(t);
 		}
 		HuffNode root = pq.remove();
 		return root;
