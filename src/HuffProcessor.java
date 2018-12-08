@@ -71,6 +71,7 @@ public class HuffProcessor {
 				pq.add(new HuffNode(i, freq[i], null, null));
 			}
 		}
+		pq.add(new HuffNode(PSEUDO_EOF, freq[PSEUDO_EOF], null , null));
 
 		while (pq.size() > 1) {
 			HuffNode left = pq.remove();
@@ -116,7 +117,6 @@ public class HuffProcessor {
 	}
 
 	private void writeCompressedBits(String[] encoding, BitInputStream in, BitOutputStream out) {
-		//TODO WRONGGGGGGGGG
 		while (true) {
 			int bit = in.readBits(BITS_PER_WORD);
 			if (bit == -1) {
