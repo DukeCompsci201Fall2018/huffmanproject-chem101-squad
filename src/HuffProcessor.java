@@ -71,13 +71,11 @@ public class HuffProcessor {
 				pq.add(new HuffNode(i, freq[i], null, null));
 			}
 		}
-		pq.add(new HuffNode(PSEUDO_EOF, freq[PSEUDO_EOF], null , null));
 
 		while (pq.size() > 1) {
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
 			HuffNode t = new HuffNode(0, left.myWeight + right.myWeight, null, null);
-			//TODO might not be 0    ^^^ Don't know what else to put in
 			pq.add(t);
 		}
 		HuffNode root = pq.remove();
@@ -102,15 +100,12 @@ public class HuffProcessor {
 	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-		// String path = "";
 		if (!(root.myRight == null && root.myLeft == null)) {
-			// path = path + "0";
 			out.writeBits(1, 0);
 			writeHeader(root.myLeft, out);
 			writeHeader(root.myRight, out);
 		}
 		if (root.myRight == null && root.myLeft == null) {
-			// path = path + "1";
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
 		}
