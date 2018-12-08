@@ -1,4 +1,5 @@
 import java.util.PriorityQueue;
+import java.util.TreeMap;
 
 /**
  * Although this class has a history of several years, it is starting from a
@@ -82,22 +83,47 @@ public class HuffProcessor {
 		return root;
 	}
 
-	private String[] makeCodingsFromTree(HuffNode root) {
-		String[] encodings = new String[ALPH_SIZE + 1];
-		codingHelper(root, "", encodings);
-
-		return encodings;
+	TreeMap<Integer,String> myMap = new TreeMap<>();
+	
+	public String[] makeCodingsFromTree(HuffNode t) {
+		codingHelper(t,"");
+		String[] ret = new String[myMap.size()];
+		int index = 0;
+		for(int s : myMap.keySet()) {
+			ret[index] = myMap.get(s);
+			index += 1;
+		}
+		return ret;
 	}
-
-	private void codingHelper(HuffNode root, String path, String[] encodings) {
+	
+	private void codingHelper(HuffNode root, String path) {
+		if (root == null) return;
+		
 		if (root.myLeft == null && root.myRight == null) {
-			encodings[root.myValue] = path;
+			myMap.put(root.myValue, path);
 			return;
 		}
-		codingHelper(root.myLeft, path + "0", encodings);
-		codingHelper(root.myRight, path + "1", encodings);
-		return;
+		codingHelper(root.myLeft,path+"0");
+		codingHelper(root.myRight,path+"1");
 	}
+
+	
+//	private String[] makeCodingsFromTree(HuffNode root) {
+//		String[] encodings = new String[ALPH_SIZE + 1];
+//		codingHelper(root, "", encodings);
+//
+//		return encodings;
+//	}
+//
+//	private void codingHelper(HuffNode root, String path, String[] encodings) {
+//		if (root.myLeft == null && root.myRight == null) {
+//			encodings[root.myValue] = path;
+//			return;
+//		}
+//		codingHelper(root.myLeft, path + "0", encodings);
+//		codingHelper(root.myRight, path + "1", encodings);
+//		return;
+//	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
 		if (!(root.myRight == null && root.myLeft == null)) {
