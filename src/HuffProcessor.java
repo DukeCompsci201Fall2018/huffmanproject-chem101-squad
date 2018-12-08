@@ -82,48 +82,23 @@ public class HuffProcessor {
 		HuffNode root = pq.remove();
 		return root;
 	}
+	
+	private String[] makeCodingsFromTree(HuffNode root) {
+		String[] encodings = new String[ALPH_SIZE + 1];
+		codingHelper(root, "", encodings);
 
-	TreeMap<Integer,String> myMap = new TreeMap<>();
-	
-	public String[] makeCodingsFromTree(HuffNode t) {
-		codingHelper(t,"");
-		String[] ret = new String[myMap.size()];
-		int index = 0;
-		for(int s : myMap.keySet()) {
-			ret[index] = myMap.get(s);
-			index += 1;
-		}
-		return ret;
+		return encodings;
 	}
-	
-	private void codingHelper(HuffNode root, String path) {
-		if (root == null) return;
-		
+
+	private void codingHelper(HuffNode root, String path, String[] encodings) {
 		if (root.myLeft == null && root.myRight == null) {
-			myMap.put(root.myValue, path);
+			encodings[root.myValue] = path;
 			return;
 		}
-		codingHelper(root.myLeft,path+"0");
-		codingHelper(root.myRight,path+"1");
+		codingHelper(root.myLeft, path + "0", encodings);
+		codingHelper(root.myRight, path + "1", encodings);
+		return;
 	}
-
-	
-//	private String[] makeCodingsFromTree(HuffNode root) {
-//		String[] encodings = new String[ALPH_SIZE + 1];
-//		codingHelper(root, "", encodings);
-//
-//		return encodings;
-//	}
-//
-//	private void codingHelper(HuffNode root, String path, String[] encodings) {
-//		if (root.myLeft == null && root.myRight == null) {
-//			encodings[root.myValue] = path;
-//			return;
-//		}
-//		codingHelper(root.myLeft, path + "0", encodings);
-//		codingHelper(root.myRight, path + "1", encodings);
-//		return;
-//	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
 		if (!(root.myRight == null && root.myLeft == null)) {
